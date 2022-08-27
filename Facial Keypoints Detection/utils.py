@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pandas as pd
 import torch
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -50,3 +51,11 @@ def load_img(path, infer=False):
         img = normalization(img).float()
         return img.to(device)
     return img
+
+
+def fpath2points(fpath):
+    fname = fpath.name
+    df = pd.read_csv('data/training_frames_keypoints.csv')
+    points = df[df.iloc[:, 0] == fname].iloc[0, 1:].to_numpy()
+    points = points.reshape(-1, 2).astype('float')
+    return torch.Tensor(points)
